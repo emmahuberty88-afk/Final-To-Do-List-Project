@@ -241,6 +241,7 @@ function onAddTask(task) {
     renderList();
     updateStats();
     showToast('Task Added');
+    saveToStorage();
 }
 // ── Called when ✕ is clicked on a card ──
 // id = the task's id string
@@ -254,6 +255,7 @@ function onDeleteTask(id) {
     renderList();
     updateStats();
     showToast('Task Deleted');
+    saveToStorage();
 }
 // ── Called when a checkbox is toggled ──
 // id = the task's id string
@@ -270,6 +272,7 @@ function onToggleComplete(id) {
     renderList();
     updateStats();
     showToast('Status Updated');
+    saveToStorage();
 }
 // ── Called when Undo is clicked ──
 function onUndo() {
@@ -277,6 +280,7 @@ function onUndo() {
     renderList();
     updateStats();
     showToast('Task Undone');
+    saveToStorage();
 }
 // ── Called when Redo is clicked ──
 function onRedo() {
@@ -284,6 +288,7 @@ function onRedo() {
     renderList();
     updateStats();
     showToast('Task Restored');
+    saveToStorage();
 }
 // ── Called every render to get the tasks to display ──
 // Return an array of Task objects in display order.
@@ -304,3 +309,21 @@ function canUndo() {
 function canRedo() {
     return redoStack.length > 0;
 }
+
+function saveToStorage(){
+    const taskArray = getTasksForDisplay();
+    lovalStorage.setItem('tasks',JSON.stringify(taskArray));
+}
+
+function loadFromStorage(){
+    const saved = localStorage.getItem('tasks');
+    if (!saved) return;
+   const taskArray = JSON.parse(saved);
+   for (const task of taskArray){
+    taskList = append(taskList, task);
+}
+}
+
+loadFromStorage();
+renderList();
+updateStats();
